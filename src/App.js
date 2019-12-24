@@ -324,7 +324,7 @@ function App() {
 	}
 
 	const stopResize = e => {
-		document.body.style.cursor = 'unset'
+		document.documentElement.style.cursor = 'unset'
 
 		window.removeEventListener('mousemove', Resize, false)
 		window.removeEventListener('mouseup', stopResize, false)
@@ -333,7 +333,7 @@ function App() {
 		window.removeEventListener('touchend', stopResize, false)
 	}
 
-	const [Render, setRender] = useState({ current: Test })
+	const [Render, setRender] = useState()
 
 	useEffect(() => {
 		if (textEditor.current) {
@@ -344,21 +344,20 @@ function App() {
 	const textEditor = useRef()
 	const lineEditor = useRef()
 
-	window.onresize = () => {
-		document.body.style.setProperty(
+	const checkResize = () => {
+		document.documentElement.style.setProperty(
 			'--vh',
 			`${window.innerHeight * 0.01}px`
 		)
 	}
 
 	useEffect(() => {
-		if (window.innerWidth <= 480) {
-			setExplorerWidth(0)
+		if (window.innerWidth <= 480) setExplorerWidth(0)
+
+		setInterval(checkResize, 100)
+		return () => {
+			clearInterval(checkResize)
 		}
-		document.body.style.setProperty(
-			'--vh',
-			`${window.innerHeight * 0.01}px`
-		)
 	}, [])
 
 	const [theme, setTheme] = useState('dark')
@@ -520,6 +519,7 @@ function App() {
 						) : (
 							<>
 								<SVG
+									style={{ marginLeft: -26, marginRight: 2 }}
 									name='minimize'
 									minimize={() => setExplorerWidth(0)}
 								/>
@@ -546,9 +546,6 @@ function App() {
 							))}
 						</div>
 						<div
-							// contentEditable={true}
-							// suppressContentEditableWarning={true}
-							// onKeyPress={e => typing(e)}
 							className='textEditor'
 							ref={textEditor}
 							onScroll={() =>
@@ -575,103 +572,30 @@ function App() {
 	)
 }
 
-// const typing = e => {
-// 	e.preventDefault()
-// 	console.log(e.key)
-// 	console.log('typed')
-// }
-
-const test = [
-	{
-		text: 'test1'
-	},
-	{
-		nextline: true
-	},
-	{
-		text: 'test2'
-	}
-]
-
 function Test() {
-	const documentLevelKeyPressHandle = useCallback(event => {
-		event.preventDefault()
-		if (document.activeElement.childNodes[0] === editorRef.current) {
-			if (event.key === 'Tab') {
-				console.log('Tab')
-			}
-			if (event.key === 'Enter') {
-				console.log('Enter')
-			}
-		}
-	}, [])
-
-	function captureSelectionPointThatIDidntWrote(e) {
-		var start = 0
-		var end = 0
-		var doc = e.ownerDocument || e.document
-		var win = doc.defaultView || doc.parentWindow
-		var sel
-		if (typeof win.getSelection != 'undefined') {
-			sel = win.getSelection()
-			if (sel.rangeCount > 0) {
-				var range = win.getSelection().getRangeAt(0)
-				var preCaretRange = range.cloneRange()
-				preCaretRange.selectNodeContents(e)
-				preCaretRange.setEnd(range.startContainer, range.startOffset)
-				start = preCaretRange.toString().length
-				preCaretRange.setEnd(range.endContainer, range.endOffset)
-				end = preCaretRange.toString().length
-			}
-		} else if ((sel = doc.selection) && sel.type !== 'Control') {
-			var textRange = sel.createRange()
-			var preCaretTextRange = doc.body.createTextRange()
-			preCaretTextRange.moveToElementText(e)
-			preCaretTextRange.setEndPoint('EndToStart', textRange)
-			start = preCaretTextRange.text.length
-			preCaretTextRange.setEndPoint('EndToEnd', textRange)
-			end = preCaretTextRange.text.length
-		}
-		return { start: start, end: end }
-	}
-
-	const editorRef = useRef()
-	const testRef = useRef()
-	const caretPosRef = useRef()
-
-	function showCaretPos() {
-		var el = testRef.current
-		var caretPosEl = caretPosRef.current
-		const { start, end } = captureSelectionPointThatIDidntWrote(el)
-		caretPosEl.innerHTML = 'Caret position: ' + start + ' : ' + end
-	}
-
-	useEffect(() => {
-		document.addEventListener(
-			'keypress',
-			documentLevelKeyPressHandle,
-			false
-		)
-		return () => {
-			document.removeEventListener(
-				'keypress',
-				documentLevelKeyPressHandle,
-				false
-			)
-		}
-	}, [documentLevelKeyPressHandle])
-
-	const keyPressedhandle = e => {}
-
 	return (
-		<div ref={editorRef}>
-			<div
-				onKeyPress={e => keyPressedhandle(e)}
-				onMouseUp={e => showCaretPos(e)}
-				ref={testRef}
-				contentEditable={true}></div>
-			<div ref={caretPosRef}></div>
-		</div>
+		<>
+			<br />
+			<br />
+			<br />
+			<div>TEST</div>
+			<br />
+			<div>⣿⠄⡇⢸⣟⠄⠁⢸⡽⠖⠛⠈⡉⣉⠉⠋⣁⢘⠉⢉⠛⡿⢿⣿⣿⣿⣿⣿⣿⣿</div>
+			<div>⣷⣶⣷⣤⠄⣠⠖⠁⠄⠂⠁⠄⠄⠉⠄⠄⠎⠄⠠⠎⢐⠄⢑⣛⠻⣿⣿⣿⣿⣿</div>
+			<div>⣿⣿⣿⠓⠨⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠈⠐⠅⠄⠉⠄⠗⠆⣸⣿⣿⣿⣿⣿</div>
+			<div>⣿⣿⣿⡣⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⢰⣤⣦⠄⠄⠄⠄⠄⠄⠄⡀⡙⣿⣿⣿⣿</div>
+			<div>⣿⣿⡛⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠔⠿⡿⠿⠒⠄⠠⢤⡀⡀⠄⠁⠄⢻⣿⣿⣿</div>
+			<div>⣿⣿⠄⠄⠄⠄⠄⠄⣠⡖⠄⠁⠁⠄⠄⠄⠄⠄⠄⠄⣽⠟⡖⠄⠄⠄⣼⣿⣿⣿</div>
+			<div>⣿⣿⠄⠄⠄⠄⠄⠄⢠⣠⣀⠄⠄⠄⠄⢀⣾⣧⠄⠂⠸⣈⡏⠄⠄⠄⣿⣿⣿⣿</div>
+			<div>⣿⣿⡞⠄⠄⠄⠄⠄⢸⣿⣶⣶⣶⣶⣶⡿⢻⡿⣻⣶⣿⣿⡇⠄⠄⠄⣿⣿⣿⣿</div>
+			<div>⣿⣿⡷⡂⠄⠄⠁⠄⠸⣿⣿⣿⣿⣿⠟⠛⠉⠉⠙⠛⢿⣿⡇⠄⠄⢀⣿⣿⣿⣿</div>
+			<div>⣶⣶⠃⠄⠄⠄⠄⠄⠄⣾⣿⣿⡿⠁⣀⣀⣤⣤⣤⣄⢈⣿⡇⠄⠄⢸⣿⣿⣿⣿</div>
+			<div>⣿⣯⠄⠄⠄⠄⠄⠄⠄⢻⣿⣿⣷⣶⣿⣿⣥⣬⣿⣿⣟⣿⠃⠄⠨⠺⢿⣿⣿⣿</div>
+			<div>⠱⠂⠄⠄⠄⠄⠄⠄⠄⣬⣸⡝⠿⢿⣿⡿⣿⠻⠟⠻⢫⡁⠄⠄⠄⡐⣾⣿⣿⣿</div>
+			<div>⡜⠄⠄⠄⠄⠄⠆⡐⡇⢿⣽⣻⣷⣦⣧⡀⡀⠄⠄⣴⣺⡇⠄⠁⠄⢣⣿⣿⣿⣿</div>
+			<div>⠡⠱⠄⠄⠡⠄⢠⣷⠆⢸⣿⣿⣿⣿⣿⣿⣷⣿⣾⣿⣿⡇⠄⠄⠠⠁⠿⣿⣿⣿</div>
+			<div>⢀⣲⣧⣷⣿⢂⣄⡉⠄⠘⠿⣿⣿⣿⡟⣻⣯⠿⠟⠋⠉⢰⢦⠄⠊⢾⣷⣮⣽⣛</div>
+		</>
 	)
 }
 

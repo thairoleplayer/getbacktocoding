@@ -63,8 +63,10 @@ img {
 	display: flex;
 }
 .resizer > div > svg {
+	background-color: var(--bg-cl-1);
+	padding: 2px;
+	max-height: 20px;
 	position: relative;
-	margin-left: 5px;
 }
 .line {
 	background-color: var(--bg-cl-2);
@@ -177,7 +179,4 @@ img {
 }
 .op-cl-tooltip > div {
 	padding: 8px 16px;
-}
-[contenteditable]:focus {
-	outline: 0px solid transparent;
 }
