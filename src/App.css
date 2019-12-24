@@ -178,3 +178,6 @@ img {
 .op-cl-tooltip > div {
 	padding: 8px 16px;
 }
+[contenteditable]:focus {
+	outline: 0px solid transparent;
+}
