@@ -1,0 +1,32 @@
+{
+    "locale": "ไทย",
+    "hello": "สวัสดี",
+    "about": {
+        "nickname": "เจ",
+        "title": "นาย",
+        "name": "จิรเดช",
+        "surname": "มโนปราณีต",
+        "birthdate": "16 เมษายน 2538",
+        "relationship": "โสด",
+        "nation": "ไทย",
+        "militaryStatus": "ผ่านการเกณฑ์ทหารแล้ว"
+    },
+    "education": [
+        {
+            "university": "มหาวทยาลัยขอนแก่น",
+            "degreee": "ปริญญาตรี คณะวิทยาศาสตร์ สาขาวิทยาการคอมพิวเตอร์ (not sure)",
+            "GPA": "3.19",
+            "period": "กรกฎาคม 2557 - กันยายน 2562"
+        }
+    ],
+    "language": {
+        "th": "ภาษาไทย",
+        "en": "ภาษาอังกฤษ",
+        "listening": "ฟัง",
+        "speaking": "พูด",
+        "reading": "อ่าน",
+        "writing": "เขียน",
+        "good": "ดี",
+        "okay": "ใช้ได้"
+    }
+}
