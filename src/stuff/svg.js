@@ -1,9 +1,5 @@
 import React from 'react'
 
-const color = vcolor => {
-	return getComputedStyle(document.documentElement).getPropertyValue(vcolor)
-}
-
 const _style = {
 	verticalAlign: 'bottom'
 }
@@ -580,10 +576,9 @@ const Svg = ({
 				if (typeof resize !== 'undefined') resize(e)
 			}}
 			onClick={() => {
-				if (typeof setTheme !== 'undefined') {
+				if (typeof setTheme !== 'undefined')
 					setTheme(theme === 'dark' ? 'light' : 'dark')
-					console.log(theme)
-				}
+
 				if (typeof setLang !== 'undefined') setLang(lang)
 			}}
 			role='img'

@@ -1,33 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useDrop, useDrag } from 'react-dnd'
-import Icon from '../stuff/svg'
+import SVG from '../stuff/svg'
+import { AppContext } from '../App'
 
 const File = ({ props }) => {
+	const { idx, file, dropping, setDropping } = props
+
 	const {
 		files,
 		setFiles,
-		dropping,
-		setDropping,
-		idx,
-		file,
 		setRender,
 		setExplorerActive,
 		setFileActive,
 		fileActive,
 		explorer,
-		setExplorer
-	} = props
+		setExplorer,
+		isMobileDevice
+	} = useContext(AppContext)
+
 	const [{ isDragging }, drag] = useDrag({
 		item: { name: idx, type: 'box' },
 		begin: () => {
 			setDropping(idx)
+			activeFileHandle()
 		},
 		end: (item, monitor) => {
 			setDropping(-1)
 			const dropResult = monitor.getDropResult()
 			if (item && dropResult) {
 				const newFiles = [...files]
-				swap(newFiles, item.name, dropResult.name)
+				setFiles(swap(newFiles, item.name, dropResult.name))
 			}
 		},
 		collect: monitor => ({
@@ -46,24 +48,52 @@ const File = ({ props }) => {
 
 	const isActive = canDrop && isOver
 
-	const opacity = isDragging ? 0.4 : 1
+	const opacity = isDragging ? 0.3 : 1
 
-	const swap = (a, x, y) => {
-		const temp = a[x]
-		a[x] = a[y]
-		a[y] = temp
-		setFiles(a)
-		return a
+	const swap = (arr, i, j) => {
+		const temp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = temp
+		return arr
 	}
 
 	const [hover, setHover] = useState(false)
 
-	function isMobileDevice() {
-		return (
-			typeof window.orientation !== 'undefined' ||
-			navigator.userAgent.indexOf('IEMobile') !== -1
-		)
+	const activeFileHandle = () => {
+		setRender({ current: file.render })
+		setExplorerActive(file.id)
+		setFileActive(file.id)
+		const parentIdx = explorer.findIndex(_explorer => {
+			return _explorer.id === file.parentId
+		})
+		if (!explorer[parentIdx].open)
+			setExplorer([
+				...explorer.slice(0, parentIdx),
+				{
+					...explorer[parentIdx],
+					open: !explorer[parentIdx].open
+				},
+				...explorer.slice(parentIdx + 1)
+			])
 	}
+
+	const deleteFileHandle = e => {
+		e.stopPropagation()
+		const newFiles = [...files]
+		newFiles.splice(idx - newFiles.length, 1)
+		if (newFiles.length === 0) {
+			setFileActive(null)
+			setExplorerActive(null)
+		} else if (file.id === fileActive) {
+			setFileActive(newFiles[newFiles.length - 1].id)
+			setExplorerActive(newFiles[newFiles.length - 1].id)
+			setRender({
+				current: newFiles[newFiles.length - 1].render
+			})
+		}
+		setFiles(newFiles)
+	}
+
 	return (
 		<div
 			ref={dropping === -1 || dropping === idx ? drag : drop}
@@ -77,26 +107,10 @@ const File = ({ props }) => {
 			}`}
 			onMouseOver={() => (isMobileDevice() ? null : setHover(true))}
 			onMouseLeave={() => (isMobileDevice() ? null : setHover(false))}
-			onClick={() => {
-				setRender({ current: file.render })
-				setExplorerActive(file.id)
-				setFileActive(file.id)
-				const parentIdx = explorer.findIndex(_explorer => {
-					return _explorer.id === file.parentId
-				})
-				if (!explorer[parentIdx].open)
-					setExplorer([
-						...explorer.slice(0, parentIdx),
-						{
-							...explorer[parentIdx],
-							open: !explorer[parentIdx].open
-						},
-						...explorer.slice(parentIdx + 1)
-					])
-			}}>
+			onClick={() => activeFileHandle()}>
 			<div>
 				<span style={{ whiteSpace: 'nowrap' }}>
-					<Icon name={file.type} /> {file.name}
+					<SVG name={file.type} /> {file.name}
 				</span>
 				<span
 					style={{
@@ -107,23 +121,8 @@ const File = ({ props }) => {
 								? 'visible'
 								: 'hidden'
 					}}
-					onClick={e => {
-						e.stopPropagation()
-						const newFiles = [...files]
-						newFiles.splice(idx - newFiles.length, 1)
-						if (newFiles.length === 0) {
-							setFileActive(null)
-							setExplorerActive(null)
-						} else if (file.id === fileActive) {
-							setFileActive(newFiles[newFiles.length - 1].id)
-							setExplorerActive(newFiles[newFiles.length - 1].id)
-							setRender({
-								current: newFiles[newFiles.length - 1].render
-							})
-						}
-						setFiles(newFiles)
-					}}>
-					<Icon name='close' />
+					onClick={e => deleteFileHandle(e)}>
+					<SVG name='close' />
 				</span>
 			</div>
 		</div>

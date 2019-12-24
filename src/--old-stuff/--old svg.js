@@ -142,7 +142,7 @@ const next_template = [
 	}
 ]
 
-const xd = {
+export const xd = {
 	folder_star_open: folder_open,
 	folder_img_open: folder_open,
 	folder_open: folder_open,

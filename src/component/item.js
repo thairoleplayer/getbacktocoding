@@ -1,21 +1,21 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import SVG from '../stuff/svg'
+import { AppContext } from '../App'
 
-function Item({ props }) {
+const Item = ({ props }) => {
+	const { item, idx, _idx } = props
+
 	const {
 		explorer,
 		setExplorer,
 		explorerActive,
 		setExplorerActive,
-		item,
-		idx,
-		_idx,
 		setRender,
 		files,
 		setFiles,
 		setFileActive,
 		explorerWidth
-	} = props
+	} = useContext(AppContext)
 
 	return (
 		<div

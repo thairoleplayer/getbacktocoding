@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Test() {
+export function Test() {
 	return (
 		<>
 			<br />
@@ -1105,7 +1105,7 @@ function Test() {
 	)
 }
 
-function Test2() {
+export function Test2() {
 	return (
 		<>
 			<br />

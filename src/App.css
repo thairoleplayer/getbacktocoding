@@ -17,6 +17,7 @@ img {
 .header {
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	background-color: var(--bg-cl-3);
 	grid-column: 1/-1;
 }
@@ -171,7 +172,7 @@ img {
 }
 .editor-sub-header::-webkit-scrollbar {
 	width: 0;
-	height: 3px;
+	height: 6px;
 }
 
 .op-cl-tooltip {
